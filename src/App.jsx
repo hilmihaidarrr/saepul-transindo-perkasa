@@ -477,7 +477,7 @@ function ContactCTA() {
             <h3 className="text-xl md:text-2xl font-bold mt-1">Diskusikan kebutuhan pengiriman Anda</h3>
             <p className="text-gray-600 mt-2">Kami siap memberikan solusi terbaik—cepat, aman, dan transparan.</p>
           </div>
-          <a href={"https://wa.me/"} className="px-5 py-3 rounded-xl bg-[rgb(var(--brand))] text-white font-semibold hover:opacity-90">Chat WhatsApp</a>
+          <a href={"https://wa.me/6281212328402"} className="px-5 py-3 rounded-xl bg-[rgb(var(--brand))] text-white font-semibold hover:opacity-90">Chat WhatsApp</a>
         </div>
       </div>
     </section>
