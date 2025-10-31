@@ -11,15 +11,10 @@ const NAV = [
   { label: 'Home', href: '#home' },
   { label: 'Profile', href: '#profile' },
   { label: 'Galeri', href: '#galeri' },
-  { label: 'Buku Tamu', href: '#buku-tamu' },
+  { label: 'Cek Resi', href: '#resi' },
   { label: 'Contact', href: '#contact' },
 ]
 
-const HERO_SLIDES = [
-  { src: '/pengiriman.jpg', title: 'Jasa Pengiriman Seluruh Nusantara', sub: 'Ekspedisi cargo darat, laut, udara - Cepat, Aman, Terpercaya.' },
-  { src: '/kirimmobil.jpg', title: 'Pengiriman Kendaraan', sub: 'Mobil & Motor antar pulau dengan pengamanan profesional.' },
-  { src: '/trucking.jpg', title: 'Trucking & Kontainer (LCL / FCL)', sub: 'Jaringan armada nasional untuk kebutuhan bisnis Anda.' },
-]
 
 function Navbar() {
   return (
@@ -81,7 +76,7 @@ function Navbar() {
 function Hero() {
   const slides = [
     {
-      img: "/hero-6.jpg",
+      img: "/13.jpg",
       title: "Jasa Pengiriman Seluruh Nusantara",
       sub: "Layanan ekspedisi cargo darat, laut, udara - cepat, aman, terpercaya.",
     },
@@ -301,9 +296,9 @@ function Profile() {
 function Galeri() {
   const ALL = [
     
-    { src: "/9.jpg", caption: "Loading gudang", tag: "Operasional" },
-    { src: "/12.jpg", caption: "Trucking kontainer", tag: "Operasional" },
-    { src: "/11.jpg", caption: "Dermaga pelabuhan", tag: "Operasional" },
+    { src: "/9.jpg", caption: "Loading Barang", tag: "Operasional" },
+    { src: "/12.jpg", caption: "Loading Alat Berat", tag: "Operasional" },
+    { src: "/11.jpg", caption: "Pengiriman Truck", tag: "Operasional" },
   
     { src: "/c1.jpg", caption: "Serah terima unit", tag: "Client" },
     { src: "/c3.jpg", caption: "Serah terima unit", tag: "Client" },
@@ -423,49 +418,142 @@ function Galeri() {
 }
 
 
-function BukuTamu() {
+function CekResi() {
+  const [resi, setResi] = React.useState("");
+  const [result, setResult] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!resi.trim()) {
+      setResult({ error: "Masukkan nomor resi terlebih dahulu." });
+      return;
+    }
+    setResult(null);
+    setLoading(true);
+
+    setTimeout(() => {
+      setResult({
+        status: "Data resi tidak ditemukan. Mohon periksa kembali nomor resi Anda atau hubungi layanan pelanggan kami untuk bantuan lebih lanjut.",
+        lokasi: "-",
+        tanggal: new Date().toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" }),
+        step: -1, 
+      });
+      setLoading(false);
+    }, 1200);
+  };
+
+
+  const TruckIcon = ({ className = "w-6 h-6" }) => (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <path d="M3 7h9v7H3z" stroke="currentColor" strokeWidth="1.6"/>
+      <path d="M12 9h5l3 3v2h-8V9z" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="7" cy="16.5" r="1.75" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="17" cy="16.5" r="1.75" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M2 16.5h3M19 16.5h3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+    </svg>
+  );
+
+
+  const Spinner = () => (
+    <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+      <path className="opacity-90" fill="currentColor" d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z"/>
+    </svg>
+  );
+
+
+  const Steps = ({ step = 0 }) => {
+    const labels = ["Pickup", "Transit", "Delivery"];
+    return (
+      <div className="mt-4">
+        <ol className="flex items-center justify-between text-xs sm:text-sm">
+          {labels.map((l, i) => (
+            <li key={l} className="flex-1 flex items-center">
+              <div className={`flex items-center gap-2 ${i <= step ? "text-[rgb(var(--brand))]" : "text-gray-400"}`}>
+                <span className={`grid place-items-center w-6 h-6 rounded-full border ${i <= step ? "bg-blue-50 border-[rgb(var(--brand))]" : "border-gray-300"}`}>
+                  {i < step ? "✓" : i === step ? "•" : ""}
+                </span>
+                <span className="hidden sm:inline">{l}</span>
+              </div>
+              {i < labels.length - 1 && <div className={`mx-2 h-[2px] flex-1 ${i < step ? "bg-[rgb(var(--brand))]" : "bg-gray-200"}`} />}
+            </li>
+          ))}
+        </ol>
+      </div>
+    );
+  };
+
   return (
-    <section id="buku-tamu" className="py-14 md:py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl border bg-white p-8 md:p-12 grid md:grid-cols-2 gap-8 items-start">
-          <div>
-            <p className="text-sm uppercase tracking-widest text-brand font-semibold">Buku Tamu</p>
-            <h3 className="text-2xl md:text-3xl font-bold mt-2">Tinggalkan Pesan & Kebutuhan Anda</h3>
-            <p className="mt-3 text-gray-600">Tim kami akan menghubungi Anda untuk estimasi harga dan waktu pengiriman.</p>
-            <ul className="mt-4 text-gray-700 space-y-2">
-              <li><span className="font-semibold">WhatsApp:</span> {CONTACT.whatsapp}</li>
-              <li><span className="font-semibold">Email:</span> {CONTACT.email}</li>
-              <li><span className="font-semibold">Alamat:</span> {CONTACT.address}</li>
-            </ul>
-          </div>
-          <form className="space-y-4" onSubmit={(e)=>{e.preventDefault(); alert('Terima kasih! (Demo form)')}}>
-            <div className="grid sm:grid-cols-2 gap-4">
-              <input className="w-full rounded-xl border px-4 py-3" placeholder="Nama Lengkap" required />
-              <input className="w-full rounded-xl border px-4 py-3" placeholder="Perusahaan (opsional)" />
+    <section id="resi" className="py-14 md:py-20 bg-white">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        {/* Header dengan ikon */}
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-[rgb(var(--brand))] border border-blue-100">
+          <TruckIcon className="w-4 h-4" />
+          <span className="text-xs font-semibold uppercase tracking-widest">Tracking</span>
+        </div>
+        <h2 className="text-2xl md:text-3xl font-bold mt-3">Cek Resi Pengiriman</h2>
+        <p className="text-gray-600 mt-2">
+          Masukkan nomor resi Anda untuk melacak status pengiriman barang.
+        </p>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+          <input
+            type="text"
+            value={resi}
+            onChange={(e) => setResi(e.target.value)}
+            placeholder="Masukkan nomor resi..."
+            className="flex-1 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-[rgb(var(--brand))] outline-none"
+            aria-label="Nomor resi"
+          />
+          <button
+            type="submit"
+            disabled={loading}
+            className={`px-6 py-3 rounded-xl text-white font-semibold transition inline-flex items-center justify-center gap-2
+              ${loading ? "bg-[#23935E] cursor-not-allowed opacity-90" : "bg-[#2BB673] hover:bg-[#23935E]"}`}
+            aria-busy={loading ? "true" : "false"}
+          >
+            {loading ? (<><Spinner/> Memeriksa…</>) : "Cek Resi"}
+          </button>
+        </form>
+
+        {/* Hasil */}
+        <div className="mt-8 text-left sm:text-center">
+          {loading && (
+            <div className="mx-auto max-w-xl rounded-xl border bg-gray-50 p-5 text-gray-600">
+              <p className="flex items-center gap-2 justify-center"><Spinner/> Mengambil data resi…</p>
             </div>
-            <div className="grid sm:grid-cols-2 gap-4">
-              <input className="w-full rounded-xl border px-4 py-3" placeholder="Email" type="email" required />
-              <input className="w-full rounded-xl border px-4 py-3" placeholder="No. WhatsApp" required />
+          )}
+
+          {result && !loading && (
+            <div className="mx-auto max-w-xl rounded-xl border bg-white p-5 shadow-sm">
+              {result.error ? (
+                <p className="text-red-600 font-semibold">{result.error}</p>
+              ) : (
+                <>
+                  <p className="text-xs text-gray-500">Nomor Resi: <strong className="text-gray-800">{resi}</strong></p>
+                  <p className="mt-2">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700 border border-green-200">
+                      Status: {result.status}
+                    </span>
+                  </p>
+                  <p className="text-sm mt-2">Lokasi terakhir: <span className="font-medium">{result.lokasi}</span></p>
+                  <p className="text-sm text-gray-500">Tanggal update: {result.tanggal}</p>
+
+                  {/* Progress langkah */}
+                  <Steps step={result.step} />
+                </>
+              )}
             </div>
-            <select className="w-full rounded-xl border px-4 py-3" required>
-              <option value="">Pilih Layanan</option>
-              <option>Ekspedisi Cargo (Darat)</option>
-              <option>Ekspedisi Cargo (Laut)</option>
-              <option>Ekspedisi Cargo (Udara)</option>
-              <option>Pengiriman Kendaraan</option>
-              <option>Trucking & Kontainer (LCL/FCL)</option>
-            </select>
-            <textarea className="w-full rounded-xl border px-4 py-3" rows={4} placeholder="Detail kebutuhan: asal, tujuan, jenis barang, estimasi berat/volume" />
-            <button type="submit" className="w-full rounded-xl bg-[rgb(var(--brand))] text-white font-semibold py-3 hover:opacity-90">
-              Kirim Pesan
-            </button>
-            <p className="text-xs text-gray-500">*Form ini untuk demo. Integrasi bisa ditambahkan nanti.</p>
-          </form>
+          )}
         </div>
       </div>
     </section>
-  )
+  );
 }
+
+
 
 function ContactCTA() {
   return (
@@ -475,9 +563,9 @@ function ContactCTA() {
           <div className="max-w-3xl">
             <p className="text-sm uppercase tracking-widest text-brand font-semibold">Hubungi Kami</p>
             <h3 className="text-xl md:text-2xl font-bold mt-1">Diskusikan kebutuhan pengiriman Anda</h3>
-            <p className="text-gray-600 mt-2">Kami siap memberikan solusi terbaik—cepat, aman, dan transparan.</p>
+            <p className="text-gray-600 mt-2">Kami siap memberikan solusi terbaik - cepat, aman, dan transparan.</p>
           </div>
-          <a href={"https://wa.me/6281212328402"} className="px-5 py-3 rounded-xl bg-[rgb(var(--brand))] text-white font-semibold hover:opacity-90">Chat WhatsApp</a>
+          <a href={"https://wa.me/6281212328402?text=Halo%20Saepul%20Transindo%20Perkasa%2C%20saya%20ingin%20mengirim%20barang."} className="px-5 py-3 rounded-xl bg-[rgb(var(--brand))] text-white font-semibold hover:opacity-90">Chat WhatsApp</a>
         </div>
       </div>
     </section>
@@ -499,17 +587,14 @@ function Footer() {
               <li><a href="#home" className="hover:text-brand">Home</a></li>
               <li><a href="#profile" className="hover:text-brand">Profile</a></li>
               <li><a href="#galeri" className="hover:text-brand">Galeri</a></li>
-              <li><a href="#buku-tamu" className="hover:text-brand">Buku Tamu</a></li>
+              <li><a href="#resi" className="hover:text-brand">Cek Resi</a></li>
               <li><a href="#contact" className="hover:text-brand">Contact</a></li>
             </ul>
           </div>
           <div>
             <p className="font-semibold">Ikuti Kami</p>
             <ul className="mt-2 text-sm text-gray-600 space-y-1">
-              <li><a href="#" className="hover:text-brand">Instagram</a></li>
-              <li><a href="#" className="hover:text-brand">LinkedIn</a></li>
-              <li><a href="#" className="hover:text-brand">YouTube</a></li>
-              <li><a href="#" className="hover:text-brand">Facebook</a></li>
+              <li><a href="https://www.instagram.com/saepultransindoperkasa/" className="hover:text-brand">Instagram</a></li>
             </ul>
           </div>
         </div>
@@ -526,7 +611,7 @@ export default function App() {
       <Hero />
       <Profile />
       <Galeri />
-      <BukuTamu />
+      <CekResi />
       <ContactCTA />
       <Footer />
     </div>
