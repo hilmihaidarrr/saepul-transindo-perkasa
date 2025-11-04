@@ -17,8 +17,17 @@ const NAV = [
 
 
 function Navbar() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const toggleMenu = () => setIsOpen((prev) => !prev)
+
+  const handleNavClick = () => {
+    // Tutup menu setelah user pilih salah satu link
+    setIsOpen(false)
+  }
+
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b">
+    <header className="sticky top-0 z-50 bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="h-16 flex items-center justify-between gap-4">
           {/* Logo + Brand */}
@@ -26,11 +35,12 @@ function Navbar() {
             <img
               src="/logo-stp.jpg"
               alt="Saepul Transindo Perkasa"
-              className="h-9 w-9 rounded-lg shadow-sm object-contain"
+              className="h-9 w-9 object-contain"
             />
             <div className="leading-tight">
-              <span className="block font-extrabold text-lg md:text-xl">
-                Saepul <span className="text-brand">Transindo</span> <span className="text-brand-accent">Perkasa</span>
+              <span className="block font-extrabold text-lg md:text-xl text-[#0057A0]">
+                Saepul <span className="text-[#0057A0]">Transindo</span>{' '}
+                <span className="text-[#2BB673]">Perkasa</span>
               </span>
               <span className="hidden sm:block text-xs text-gray-500">
                 Jasa Pengiriman Seluruh Nusantara
@@ -38,40 +48,73 @@ function Navbar() {
             </div>
           </a>
 
-          {/* Nav links */}
+          {/* Menu desktop */}
           <nav className="hidden md:flex items-center gap-1">
             {NAV.map((n) => (
               <a
                 key={n.href}
                 href={n.href}
-                className="px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-[rgb(var(--brand))] hover:bg-blue-50/60 transition"
+                className="px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-[#0057A0] hover:bg-blue-50/60 transition"
               >
                 {n.label}
               </a>
             ))}
           </nav>
 
-          {/* CTA + Mobile menu */}
+          {/* CTA + tombol mobile */}
           <div className="flex items-center gap-2">
             <a
-              href="#contact"
-              className="hidden md:inline-flex px-5 py-2.5 rounded-xl text-white font-semibold
-                        bg-[#1E88E5] hover:bg-[#23935E] transition shadow-sm hover:shadow-md"
+              href="https://wa.me/6281212328402?text=Halo%20Saepul%20Transindo%20Perkasa%2C%20saya%20ingin%20mengirim%20barang."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden md:inline-flex px-4 py-2 rounded-xl bg-[#2BB673] text-white font-semibold hover:bg-[#23935E] transition shadow-sm"
             >
               Kontak Sekarang
             </a>
+
+            {/* tombol hamburger untuk HP */}
             <button
-              className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl border bg-white/70 hover:bg-gray-50"
-              aria-label="Open menu"
+              type="button"
+              onClick={toggleMenu}
+              className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl border bg-white/80 hover:bg-gray-50"
+              aria-label="Buka menu"
             >
-              ☰
+            ☰
             </button>
           </div>
         </div>
       </div>
+
+      {/* Menu dropdown untuk HP */}
+      {isOpen && (
+        <div className="md:hidden border-t bg-white">
+          <nav className="px-4 py-3 flex flex-col gap-1">
+            {NAV.map((n) => (
+              <a
+                key={n.href}
+                href={n.href}
+                onClick={handleNavClick}
+                className="py-2 text-sm font-medium text-gray-700 hover:text-[#0057A0] hover:bg-blue-50/60 rounded-lg px-2"
+              >
+                {n.label}
+              </a>
+            ))}
+            <a
+              href="https://wa.me/6281212328402?text=Halo%20Saepul%20Transindo%20Perkasa%2C%20saya%20ingin%20mengirim%20barang."
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleNavClick}
+              className="mt-2 py-2 text-sm font-semibold text-[#2BB673] border border-[#2BB673] rounded-xl px-3 text-center hover:bg-[#2BB673] hover:text-white transition"
+            >
+              Chat WhatsApp
+            </a>
+          </nav>
+        </div>
+      )}
     </header>
   )
 }
+
 
 function Hero() {
   const slides = [
